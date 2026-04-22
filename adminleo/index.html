@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Painel Admin | Leonardo</title>
+        <link rel="stylesheet" href="../style.css?v=20260213" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            .admin-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 16px;
+                flex-wrap: wrap;
+            }
+            .admin-header h1 {
+                font-size: 22px;
+            }
+            .admin-actions {
+                display: flex;
+                gap: 10px;
+                flex-wrap: wrap;
+            }
+            .admin-note {
+                font-size: 13px;
+                color: var(--text-secondary);
+                margin-top: 10px;
+                line-height: 1.4;
+            }
+            .admin-inline {
+                display: grid;
+                gap: 12px;
+            }
+            .admin-status {
+                font-size: 13px;
+                color: var(--text-secondary);
+                min-height: 18px;
+            }
+            .admin-login {
+                display: flex;
+                gap: 10px;
+                flex-wrap: wrap;
+                align-items: end;
+                margin-bottom: 10px;
+            }
+            .admin-login .field {
+                margin-bottom: 0;
+            }
+            .admin-divider {
+                height: 1px;
+                background: var(--border);
+                margin: 14px 0;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="app">
+            <header class="app-header admin-header">
+                <div class="brand">
+                    <span class="brand-mark"></span>
+                    <div>
+                        <p class="brand-title">Painel Admin</p>
+                        <p class="brand-subtitle">Editar textos, logo e footer</p>
+                    </div>
+                </div>
+                <div class="admin-actions">
+                    <a class="ghost-button" href="../index.html">Ver site</a>
+                    <button class="primary-button" type="submit" form="adminForm" id="saveButton" disabled>
+                        Salvar
+                    </button>
+                </div>
+            </header>
+
+            <main class="app-main">
+                <section class="form-card">
+                    <form id="adminForm" class="admin-inline">
+                        <div class="admin-login" id="loginArea">
+                            <div class="field" style="min-width: 260px">
+                                <label for="adminPassword">Senha do admin</label>
+                                <input id="adminPassword" type="password" autocomplete="current-password" />
+                            </div>
+                            <button class="primary-button" type="button" id="loginButton">Entrar</button>
+                            <button class="ghost-button is-hidden" type="button" id="logoutButton">
+                                Sair
+                            </button>
+                        </div>
+                        <div class="admin-status" id="authStatus"></div>
+                        <div class="admin-divider"></div>
+
+                        <div class="field">
+                            <label for="pageTitle">Título da página (aba do navegador)</label>
+                            <input id="pageTitle" name="pageTitle" type="text" />
+                        </div>
+
+                        <div class="field-grid">
+                            <div class="field">
+                                <label for="brandTitle">Título do topo</label>
+                                <input id="brandTitle" name="brandTitle" type="text" />
+                            </div>
+                            <div class="field">
+                                <label for="brandSubtitle">Subtítulo do topo</label>
+                                <input id="brandSubtitle" name="brandSubtitle" type="text" />
+                            </div>
+                        </div>
+
+                        <div class="field-grid">
+                            <div class="field">
+                                <label for="statusPill">Texto do selo</label>
+                                <input id="statusPill" name="statusPill" type="text" />
+                            </div>
+                            <div class="field">
+                                <label for="heroEyebrow">Texto pequeno do banner</label>
+                                <input id="heroEyebrow" name="heroEyebrow" type="text" />
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label for="heroTitle">Título principal (h1)</label>
+                            <input id="heroTitle" name="heroTitle" type="text" />
+                        </div>
+
+                        <div class="field">
+                            <label for="heroText">Texto do banner</label>
+                            <textarea id="heroText" name="heroText" rows="3"></textarea>
+                        </div>
+
+                        <div class="field-grid">
+                            <div class="field">
+                                <label for="logoUrl">URL do logo (opcional)</label>
+                                <input id="logoUrl" name="logoUrl" type="url" placeholder="https://..." />
+                            </div>
+                            <div class="field">
+                                <label for="logoAlt">Texto alternativo do logo</label>
+                                <input id="logoAlt" name="logoAlt" type="text" />
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label for="footerHtml">Footer (HTML)</label>
+                            <textarea id="footerHtml" name="footerHtml" rows="4"></textarea>
+                        </div>
+
+                        <div class="admin-status" id="status"></div>
+                        <div class="admin-note">
+                            Se você estiver abrindo o site direto pelo arquivo (file://), o painel salva
+                            no seu navegador. Em hospedagem com PHP, ele salva no arquivo site-config.json.
+                        </div>
+                    </form>
+                </section>
+            </main>
+        </div>
+
+        <script>
+            const form = document.getElementById("adminForm");
+            const statusEl = document.getElementById("status");
+            const authStatusEl = document.getElementById("authStatus");
+            const passwordInput = document.getElementById("adminPassword");
+            const loginButton = document.getElementById("loginButton");
+            const logoutButton = document.getElementById("logoutButton");
+            const saveButton = document.getElementById("saveButton");
+            let csrfToken = "";
+            let canServerSave = false;
+            let serverConfigured = false;
+
+            const defaultConfig = {
+                pageTitle: "Plataforma de Projetos Culturais | Provenet",
+                brandTitle: "Provenet Cultural",
+                brandSubtitle: "Plataforma de patrocínios privados",
+                statusPill: "Edital 2026",
+                heroEyebrow: "Cadastro e pré-seleção de projetos",
+                heroTitle: "Envie sua proposta cultural com clareza e impacto",
+                heroText:
+                    "Preencha cada etapa com atenção. O sistema gera uma avaliação automática para apoiar a análise do comitê de patrocínio.",
+                logoUrl: "",
+                logoAlt: "",
+                footerHtml:
+                    '© 2026 — Developed &amp; Designed by <a href="https://github.com/leonardonmariano" class="author" target="_blank" rel="noopener noreferrer">Leonardo Nascimento</a>',
+            };
+
+            const setStatus = (message) => {
+                statusEl.textContent = message;
+            };
+
+            const setAuthStatus = (message) => {
+                authStatusEl.textContent = message;
+            };
+
+            const safeParseJson = (raw) => {
+                try {
+                    return JSON.parse(raw);
+                } catch {
+                    return null;
+                }
+            };
+
+            const readLocalConfig = () => {
+                const raw = localStorage.getItem("siteConfig");
+                if (!raw) return null;
+                const parsed = safeParseJson(raw);
+                return parsed && typeof parsed === "object" ? parsed : null;
+            };
+
+            const fillForm = (config) => {
+                Object.entries(defaultConfig).forEach(([key]) => {
+                    const el = form.elements[key];
+                    if (!el) return;
+                    el.value = typeof config?.[key] === "string" ? config[key] : defaultConfig[key];
+                });
+            };
+
+            const loadConfig = async () => {
+                if (location.protocol === "file:") {
+                    fillForm(readLocalConfig() || defaultConfig);
+                    return;
+                }
+
+                try {
+                    const res = await fetch("../site-config.json", { cache: "no-store" });
+                    if (!res.ok) throw new Error("Falha ao carregar");
+                    const config = await res.json();
+                    fillForm(config);
+                } catch {
+                    fillForm(readLocalConfig() || defaultConfig);
+                }
+            };
+
+            const collectConfig = () => {
+                const config = {};
+                Object.keys(defaultConfig).forEach((key) => {
+                    const el = form.elements[key];
+                    config[key] = el ? String(el.value ?? "") : defaultConfig[key];
+                });
+                return config;
+            };
+
+            const saveLocalConfig = (config) => {
+                localStorage.setItem("siteConfig", JSON.stringify(config));
+            };
+
+            const getAuthState = async () => {
+                if (location.protocol === "file:") {
+                    return { configured: false, authenticated: true, csrf: "" };
+                }
+                try {
+                    const res = await fetch("../paineladminLeonardo/me.php", { cache: "no-store" });
+                    if (!res.ok) throw new Error("Falha");
+                    return await res.json();
+                } catch {
+                    return { configured: false, authenticated: false, csrf: "" };
+                }
+            };
+
+            const setUiAuthState = ({ configured, authenticated, csrf }) => {
+                csrfToken = typeof csrf === "string" ? csrf : "";
+                serverConfigured = !!configured;
+                canServerSave = location.protocol !== "file:" && !!configured && !!authenticated;
+
+                saveButton.disabled = false;
+                loginButton.classList.toggle("is-hidden", authenticated);
+                logoutButton.classList.toggle("is-hidden", !authenticated);
+
+                if (location.protocol === "file:") {
+                    setAuthStatus("Modo arquivo: salvamento fica no seu navegador.");
+                    return;
+                }
+
+                if (!configured) {
+                    setAuthStatus(
+                        "Servidor sem ADMIN_PASSWORD_HASH. Salvar vai ficar só no navegador."
+                    );
+                    return;
+                }
+                if (!authenticated) {
+                    setAuthStatus("Faça login para salvar no servidor. Sem login, salva só no navegador.");
+                    return;
+                }
+                setAuthStatus("Autenticado. Você pode salvar no servidor.");
+            };
+
+            const saveServerConfig = async (config) => {
+                const res = await fetch("../paineladminLeonardo/save-config.php", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(config),
+                });
+                if (!res.ok) {
+                    const text = await res.text();
+                    throw new Error(text || "Erro ao salvar no servidor");
+                }
+                return await res.json();
+            };
+
+            const login = async () => {
+                const password = String(passwordInput.value || "");
+                if (!password) {
+                    setAuthStatus("Digite a senha.");
+                    return;
+                }
+                if (location.protocol !== "file:" && (!csrfToken || !serverConfigured)) {
+                    const state = await getAuthState();
+                    setUiAuthState(state);
+                }
+                setAuthStatus("Entrando...");
+                try {
+                    const res = await fetch("../paineladminLeonardo/login.php", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json", "X-CSRF-Token": csrfToken },
+                        body: JSON.stringify({ password }),
+                    });
+                    if (!res.ok) throw new Error("Falha no login");
+                    passwordInput.value = "";
+                    const state = await getAuthState();
+                    setUiAuthState(state);
+                } catch {
+                    setAuthStatus("Senha inválida ou servidor sem PHP.");
+                }
+            };
+
+            const logout = async () => {
+                if (location.protocol === "file:") return;
+                setAuthStatus("Saindo...");
+                try {
+                    await fetch("../paineladminLeonardo/logout.php", {
+                        method: "POST",
+                        headers: { "X-CSRF-Token": csrfToken },
+                    });
+                } catch {}
+                const state = await getAuthState();
+                setUiAuthState(state);
+            };
+
+            form.addEventListener("submit", async (event) => {
+                event.preventDefault();
+                const config = collectConfig();
+                saveLocalConfig(config);
+
+                if (location.protocol === "file:") {
+                    setStatus("Salvo no navegador. Abra o site para ver as mudanças.");
+                    return;
+                }
+
+                if (!canServerSave) {
+                    if (!serverConfigured) {
+                        setStatus("Salvo no navegador. Configure ADMIN_PASSWORD_HASH para salvar no servidor.");
+                    } else {
+                        setStatus("Salvo no navegador. Faça login para salvar no servidor.");
+                    }
+                    return;
+                }
+
+                setStatus("Salvando no servidor...");
+                try {
+                    const res = await fetch("../paineladminLeonardo/save-config.php", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json", "X-CSRF-Token": csrfToken },
+                        body: JSON.stringify(config),
+                    });
+                    if (!res.ok) throw new Error("Falha ao salvar");
+                    setStatus("Salvo no servidor. Recarregue o site para ver as mudanças.");
+                } catch {
+                    setStatus("Salvo no navegador. Não foi possível salvar no servidor.");
+                }
+            });
+
+            loginButton.addEventListener("click", login);
+            logoutButton.addEventListener("click", logout);
+            passwordInput.addEventListener("keydown", (event) => {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    login();
+                }
+            });
+
+            (async () => {
+                await loadConfig();
+                const state = await getAuthState();
+                setUiAuthState(state);
+            })();
+        </script>
+    </body>
+</html>

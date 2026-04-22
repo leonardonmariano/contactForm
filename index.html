@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Plataforma de Projetos Culturais | Provenet</title>
+        <link
+            rel="icon"
+            href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http://www.w3.org/2000/svg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%231e3a8a%22/%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%230ea5e9%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2230%22%20fill%3D%22url(%23g)%22/%3E%3C/svg%3E"
+        />
+        <link rel="stylesheet" href="style.css?v=20260213" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+            rel="stylesheet"
+        />
+    </head>
+    <body>
+        <div class="app">
+            <header class="app-header">
+                <div class="brand">
+                    <span class="brand-mark" id="brandMark"></span>
+                    <img class="brand-logo is-hidden" id="brandLogo" alt="" />
+                    <div>
+                        <p class="brand-title" id="brandTitle">Provenet Cultural</p>
+                        <p class="brand-subtitle" id="brandSubtitle">Plataforma de patrocínios privados</p>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <span class="status-pill" id="statusPill">Edital 2026</span>
+                    <button class="ghost-button" type="button" id="saveDraft">
+                        Salvar rascunho
+                    </button>
+                </div>
+            </header>
+
+            <main class="app-main">
+                <section class="hero">
+                    <div>
+                        <p class="hero-eyebrow" id="heroEyebrow">Cadastro e pré-seleção de projetos</p>
+                        <h1 id="heroTitle">Envie sua proposta cultural com clareza e impacto</h1>
+                        <p class="hero-text" id="heroText">
+                            Preencha cada etapa com atenção. O sistema gera uma avaliação automática
+                            para apoiar a análise do comitê de patrocínio.
+                        </p>
+                    </div>
+                    <div class="hero-card">
+                        <p class="hero-card-title">Status do formulário</p>
+                        <div class="progress">
+                            <div class="progress-bar" id="progressBar"></div>
+                        </div>
+                        <p class="progress-label" id="progressLabel">Etapa 1 de 7</p>
+                        <div class="hero-meta">
+                            <div>
+                                <span class="meta-title">Tempo médio</span>
+                                <span class="meta-value">18 min</span>
+                            </div>
+                            <div>
+                                <span class="meta-title">Avaliação</span>
+                                <span class="meta-value">Automática</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="form-shell">
+                    <aside class="stepper">
+                        <p class="stepper-title">Etapas</p>
+                        <ol class="stepper-list">
+                            <li class="step-item is-active" data-step="1">
+                                <span>1</span>
+                                <div>
+                                    <p>Informações básicas</p>
+                                    <span>Projeto, público e período</span>
+                                </div>
+                            </li>
+                            <li class="step-item" data-step="2">
+                                <span>2</span>
+                                <div>
+                                    <p>Justificativa</p>
+                                    <span>Relevância e alinhamento</span>
+                                </div>
+                            </li>
+                            <li class="step-item" data-step="3">
+                                <span>3</span>
+                                <div>
+                                    <p>Orçamento</p>
+                                    <span>Custos e patrocínios</span>
+                                </div>
+                            </li>
+                            <li class="step-item" data-step="4">
+                                <span>4</span>
+                                <div>
+                                    <p>Equipe</p>
+                                    <span>Responsáveis e experiência</span>
+                                </div>
+                            </li>
+                            <li class="step-item" data-step="5">
+                                <span>5</span>
+                                <div>
+                                    <p>Viabilidade</p>
+                                    <span>Execução e sustentabilidade</span>
+                                </div>
+                            </li>
+                            <li class="step-item" data-step="6">
+                                <span>6</span>
+                                <div>
+                                    <p>Métricas</p>
+                                    <span>Resultados esperados</span>
+                                </div>
+                            </li>
+                            <li class="step-item" data-step="7">
+                                <span>7</span>
+                                <div>
+                                    <p>Documentos</p>
+                                    <span>Arquivos e parcerias</span>
+                                </div>
+                            </li>
+                        </ol>
+                    </aside>
+
+                    <section class="form-card">
+                        <form id="projectForm" novalidate>
+                            <div class="form-alert" id="formAlert" role="status"></div>
+
+                            <section class="form-step is-active" data-step="1">
+                                <div class="step-header">
+                                    <h2>Informações básicas</h2>
+                                    <p>Defina o projeto, seu contexto e o público principal.</p>
+                                </div>
+                                <div class="field-grid">
+                                    <div class="field">
+                                        <label for="titulo">Título do projeto</label>
+                                        <input
+                                            type="text"
+                                            id="titulo"
+                                            name="titulo"
+                                            placeholder="Ex: Festival de Artes da Periferia"
+                                            minlength="4"
+                                            required
+                                        />
+                                    </div>
+                                    <div class="field">
+                                        <label for="categoria">Categoria cultural</label>
+                                        <select id="categoria" name="categoria" required>
+                                            <option value="" selected disabled>Selecione</option>
+                                            <option value="musica">Música</option>
+                                            <option value="danca">Dança</option>
+                                            <option value="teatro">Teatro</option>
+                                            <option value="literatura">Literatura</option>
+                                            <option value="artes-visuais">Artes Visuais</option>
+                                            <option value="audiovisual">Audiovisual</option>
+                                            <option value="patrimonio">Patrimônio e Memória</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <label for="descricao">Descrição do projeto</label>
+                                    <textarea
+                                        id="descricao"
+                                        name="descricao"
+                                        rows="4"
+                                        minlength="30"
+                                        required
+                                    ></textarea>
+                                </div>
+                                <div class="field">
+                                    <span class="field-label">Público-alvo</span>
+                                    <div class="checkbox-grid" data-required-group="audience">
+                                        <label class="checkbox-card">
+                                            <input type="checkbox" name="publicoAlvo" value="Comunidade local" />
+                                            Comunidade local
+                                        </label>
+                                        <label class="checkbox-card">
+                                            <input type="checkbox" name="publicoAlvo" value="Jovens e estudantes" />
+                                            Jovens e estudantes
+                                        </label>
+                                        <label class="checkbox-card">
+                                            <input type="checkbox" name="publicoAlvo" value="Artistas independentes" />
+                                            Artistas independentes
+                                        </label>
+                                        <label class="checkbox-card">
+                                            <input type="checkbox" name="publicoAlvo" value="Educadores e gestores" />
+                                            Educadores e gestores
+                                        </label>
+                                    </div>
+                                    <p class="field-error" data-error-for="audience"></p>
+                                </div>
+                                <div class="field-grid">
+                                    <div class="field">
+                                        <label for="dataInicio">Início previsto</label>
+                                        <input type="date" id="dataInicio" name="dataInicio" required />
+                                    </div>
+                                    <div class="field">
+                                        <label for="dataFim">Término previsto</label>
+                                        <input type="date" id="dataFim" name="dataFim" required />
+                                        <p class="field-error" id="dateError"></p>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <section class="form-step" data-step="2">
+                                <div class="step-header">
+                                    <h2>Justificativa e relevância</h2>
+                                    <p>Explique por que o projeto é necessário e alinhado ao patrocinador.</p>
+                                </div>
+                                <div class="field">
+                                    <label for="justificativa">Justificativa do projeto</label>
+                                    <textarea
+                                        id="justificativa"
+                                        name="justificativa"
+                                        rows="4"
+                                        minlength="50"
+                                        required
+                                    ></textarea>
+                                </div>
+                                <div class="field-grid">
+                                    <div class="field">
+                                        <label for="impactoCurto">Impacto esperado no curto prazo</label>
+                                        <textarea
+                                            id="impactoCurto"
+                                            name="impactoCurto"
+                                            rows="3"
+                                            minlength="20"
+                                            required
+                                        ></textarea>
+                                    </div>
+                                    <div class="field">
+                                        <label for="impactoLongo">Impacto esperado no longo prazo</label>
+                                        <textarea
+                                            id="impactoLongo"
+                                            name="impactoLongo"
+                                            rows="3"
+                                            minlength="20"
+                                            required
+                                        ></textarea>
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <label for="alinhamento">Alinhamento com a missão da empresa</label>
+                                    <textarea
+                                        id="alinhamento"
+                                        name="alinhamento"
+                                        rows="3"
+                                        minlength="30"
+                                        required
+                                    ></textarea>
+                                </div>
+                            </section>
+
+                            <section class="form-step" data-step="3">
+                                <div class="step-header">
+                                    <h2>Orçamento</h2>
+                                    <p>Detalhe os custos principais e a solicitação de patrocínio.</p>
+                                </div>
+                                <div class="field-grid">
+                                    <div class="field">
+                                        <label for="valorTotal">Valor total do projeto (R$)</label>
+                                        <input
+                                            type="text"
+                                            id="valorTotal"
+                                            name="valorTotal"
+                                            inputmode="decimal"
+                                            data-currency
+                                            placeholder="R$ 0,00"
+                                            required
+                                        />
+                                    </div>
+                                    <div class="field">
+                                        <label for="valorSolicitado">Valor solicitado ao patrocínio (R$)</label>
+                                        <input
+                                            type="text"
+                                            id="valorSolicitado"
+                                            name="valorSolicitado"
+                                            inputmode="decimal"
+                                            data-currency
+                                            placeholder="R$ 0,00"
+                                            required
+                                        />
+                                        <p class="field-error" id="budgetError"></p>
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <label>Despesas detalhadas</label>
+                                    <div class="dynamic-list" id="expenseList"></div>
+                                    <button type="button" class="ghost-button" data-action="add-expense">
+                                        Adicionar despesa
+                                    </button>
+                                </div>
+                                <div class="field">
+                                    <label>Outros patrocínios/apoios</label>
+                                    <div class="radio-grid">
+                                        <label class="radio-card">
+                                            <input type="radio" name="outrosPatrocinios" value="sim" required />
+                                            Sim
+                                        </label>
+                                        <label class="radio-card">
+                                            <input type="radio" name="outrosPatrocinios" value="nao" />
+                                            Não
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="field is-hidden" id="supportValueField">
+                                    <label for="valorApoio">Valor estimado dos apoios (R$)</label>
+                                    <input
+                                        type="text"
+                                        id="valorApoio"
+                                        name="valorApoio"
+                                        inputmode="decimal"
+                                        data-currency
+                                        placeholder="R$ 0,00"
+                                    />
+                                </div>
+                            </section>
+
+                            <section class="form-step" data-step="4">
+                                <div class="step-header">
+                                    <h2>Equipe responsável</h2>
+                                    <p>Apresente o time central e demais profissionais envolvidos.</p>
+                                </div>
+                                <div class="field-grid">
+                                    <div class="field">
+                                        <label for="responsavelNome">Responsável pelo projeto</label>
+                                        <input
+                                            type="text"
+                                            id="responsavelNome"
+                                            name="responsavelNome"
+                                            required
+                                        />
+                                    </div>
+                                    <div class="field">
+                                        <label for="responsavelCargo">Cargo</label>
+                                        <input
+                                            type="text"
+                                            id="responsavelCargo"
+                                            name="responsavelCargo"
+                                            required
+                                        />
+                                    </div>
+                                    <div class="field">
+                                        <label for="responsavelContato">Contato (email)</label>
+                                        <input
+                                            type="email"
+                                            id="responsavelContato"
+                                            name="responsavelContato"
+                                            placeholder="email@exemplo.com"
+                                            required
+                                        />
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <label>Equipe executora</label>
+                                    <div class="dynamic-list" id="teamList"></div>
+                                    <button type="button" class="ghost-button" data-action="add-team">
+                                        Adicionar integrante
+                                    </button>
+                                </div>
+                                <div class="field">
+                                    <label for="curriculo">Currículo / experiência</label>
+                                    <textarea
+                                        id="curriculo"
+                                        name="curriculo"
+                                        rows="4"
+                                        minlength="20"
+                                        required
+                                    ></textarea>
+                                </div>
+                            </section>
+
+                            <section class="form-step" data-step="5">
+                                <div class="step-header">
+                                    <h2>Viabilidade e sustentabilidade</h2>
+                                    <p>Mostre como o projeto será executado e mantido após o patrocínio.</p>
+                                </div>
+                                <div class="field">
+                                    <label for="planoExecucao">Plano de execução</label>
+                                    <textarea
+                                        id="planoExecucao"
+                                        name="planoExecucao"
+                                        rows="4"
+                                        minlength="30"
+                                        required
+                                    ></textarea>
+                                </div>
+                                <div class="field">
+                                    <label for="planoComunicacao">Plano de comunicação e divulgação</label>
+                                    <textarea
+                                        id="planoComunicacao"
+                                        name="planoComunicacao"
+                                        rows="4"
+                                        minlength="30"
+                                        required
+                                    ></textarea>
+                                </div>
+                                <div class="field">
+                                    <label for="planoSustentabilidade">Plano de sustentabilidade pós-patrocínio</label>
+                                    <textarea
+                                        id="planoSustentabilidade"
+                                        name="planoSustentabilidade"
+                                        rows="4"
+                                        minlength="30"
+                                        required
+                                    ></textarea>
+                                </div>
+                            </section>
+
+                            <section class="form-step" data-step="6">
+                                <div class="step-header">
+                                    <h2>Avaliação e métricas</h2>
+                                    <p>Defina indicadores e resultados esperados.</p>
+                                </div>
+                                <div class="field">
+                                    <label for="metricas">Métricas de sucesso</label>
+                                    <textarea
+                                        id="metricas"
+                                        name="metricas"
+                                        rows="4"
+                                        minlength="30"
+                                        required
+                                    ></textarea>
+                                </div>
+                                <div class="field">
+                                    <label for="resultados">Resultados esperados</label>
+                                    <textarea
+                                        id="resultados"
+                                        name="resultados"
+                                        rows="4"
+                                        minlength="30"
+                                        required
+                                    ></textarea>
+                                </div>
+                            </section>
+
+                            <section class="form-step" data-step="7">
+                                <div class="step-header">
+                                    <h2>Documentação complementar</h2>
+                                    <p>Envie materiais de apoio e referências de parcerias.</p>
+                                </div>
+                                <div class="field">
+                                    <label for="anexos">Upload de arquivos</label>
+                                    <input type="file" id="anexos" name="anexos" multiple />
+                                </div>
+                                <div class="field">
+                                    <label for="referencias">Referências e parcerias</label>
+                                    <textarea
+                                        id="referencias"
+                                        name="referencias"
+                                        rows="4"
+                                        minlength="10"
+                                        required
+                                    ></textarea>
+                                </div>
+                            </section>
+
+                            <section class="form-step" data-step="summary">
+                                <div class="step-header">
+                                    <h2>Resumo final</h2>
+                                    <p>Revise os dados e confira a avaliação automática do projeto.</p>
+                                </div>
+                                <div class="summary-grid">
+                                    <div class="summary-card">
+                                        <h3>Avaliação inteligente</h3>
+                                        <div class="score" id="scoreValue">0</div>
+                                        <p class="score-label" id="scoreLabel">Aguardando dados</p>
+                                        <div class="score-breakdown" id="scoreBreakdown"></div>
+                                    </div>
+                                    <div class="summary-card" id="summaryContent"></div>
+                                </div>
+                            </section>
+
+                            <div class="form-actions">
+                                <button type="button" class="ghost-button" data-action="prev">
+                                    Voltar
+                                </button>
+                                <button type="button" class="primary-button" data-action="next">
+                                    Continuar
+                                </button>
+                                <button type="submit" class="primary-button is-hidden" id="submitButton">
+                                    Enviar projeto
+                                </button>
+                            </div>
+                        </form>
+                    </section>
+                </section>
+            </main>
+
+            <footer class="footer" id="siteFooter">
+                © 2026 — Developed & Designed by
+                <a
+                    href="https://github.com/leonardonmariano"
+                    class="author"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    Leonardo Nascimento
+                </a>
+            </footer>
+        </div>
+
+        <template id="expenseTemplate">
+            <div class="dynamic-item">
+                <div class="field">
+                    <label>Categoria</label>
+                    <input type="text" name="despesaCategoria" placeholder="Ex: Produção, logística" required />
+                </div>
+                <div class="field">
+                    <label>Valor (R$)</label>
+                    <input
+                        type="text"
+                        name="despesaValor"
+                        inputmode="decimal"
+                        data-currency
+                        placeholder="R$ 0,00"
+                        required
+                    />
+                </div>
+                <button type="button" class="icon-button" data-action="remove-item">Remover</button>
+            </div>
+        </template>
+
+        <template id="teamTemplate">
+            <div class="dynamic-item">
+                <div class="field">
+                    <label>Nome</label>
+                    <input type="text" name="equipeNome" required />
+                </div>
+                <div class="field">
+                    <label>Função</label>
+                    <input type="text" name="equipeFuncao" required />
+                </div>
+                <div class="field">
+                    <label>Contato (email)</label>
+                    <input type="email" name="equipeContato" placeholder="email@exemplo.com" required />
+                </div>
+                <button type="button" class="icon-button" data-action="remove-item">Remover</button>
+            </div>
+        </template>
+
+        <div class="success-overlay is-hidden" id="successOverlay">
+            <div class="success-card">
+                <div class="success-header">
+                    <h2>Projeto enviado com sucesso</h2>
+                    <p>Confira os dados enviados e salve uma cópia do resumo.</p>
+                </div>
+                <div class="summary-grid">
+                    <div class="summary-card">
+                        <h3>Avaliação inteligente</h3>
+                        <div class="score" id="successScoreValue">0</div>
+                        <p class="score-label" id="successScoreLabel">Aguardando dados</p>
+                        <div class="score-breakdown" id="successScoreBreakdown"></div>
+                    </div>
+                    <div class="summary-card" id="successSummary"></div>
+                </div>
+                <div class="success-actions">
+                    <button type="button" class="ghost-button" data-action="save-success">
+                        Salvar PDF
+                    </button>
+                    <button type="button" class="primary-button" data-action="new-project">
+                        Novo projeto
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="toast" id="toast"></div>
+
+        <script src="app.js?v=20260123" defer></script>
+    </body>
+</html>

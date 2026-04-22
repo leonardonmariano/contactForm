@@ -1,0 +1,31 @@
+# Credenciais e configuração de ambiente
+config.php
+.env
+.env.local
+.env.production
+
+# Uploads e arquivos gerados
+uploads/
+temp/
+logs/
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDEs e editores
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# PHP
+*.log
+error_log
+
+# Backup files
+*.bak
+*.backup
+*.orig

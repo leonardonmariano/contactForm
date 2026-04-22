@@ -1,0 +1,10 @@
+Options -Indexes
+
+<IfModule mod_headers.c>
+    Header set Cache-Control "no-store"
+    Header always set X-Content-Type-Options "nosniff"
+</IfModule>
+
+<Files "auth.php">
+    Require all denied
+</Files>
